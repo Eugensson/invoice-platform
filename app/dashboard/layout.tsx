@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Menu, User2 } from "lucide-react";
 
 import {
@@ -20,11 +21,24 @@ import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { DashboardLinks } from "@/components/dashboard-links";
 
+import prisma from "@/app/utils/db";
 import { signOut } from "@/app/utils/auth";
 import { requireUser } from "@/app/utils/hooks";
 
+async function getUser(userId: string) {
+  const data = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { firstName: true, lastName: true, address: true },
+  });
+
+  if (!data?.firstName || !data?.lastName || !data?.address) {
+    return redirect("/onboarding");
+  }
+}
+
 const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
-  await requireUser();
+  const session = await requireUser();
+  await getUser(session.user?.id as string);
 
   return (
     <>
@@ -94,7 +108,9 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
               </DropdownMenu>
             </div>
           </header>
-          {children}
+          <main className="p-4 lg:p-6 flex flex-1 flex-col gap-4 lg:gap-6">
+            {children}
+          </main>
         </div>
       </div>
     </>

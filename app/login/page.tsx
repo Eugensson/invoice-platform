@@ -45,7 +45,7 @@ const Login = async () => {
                   placeholder="your.email@example.com"
                 />
               </div>
-              <SubmitButton />
+              <SubmitButton text="Login" />
             </form>
           </CardContent>
         </Card>
