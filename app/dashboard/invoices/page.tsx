@@ -21,7 +21,7 @@ const InvoicesPage = () => {
           <CardDescription>Manager your invoices right here</CardDescription>
         </div>
         <CardAction>
-          <Link href="/dashboard/invoices/new" className={buttonVariants()}>
+          <Link href="/dashboard/invoices/create" className={buttonVariants()}>
             <Plus />
             Create Invoice
           </Link>
