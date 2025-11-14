@@ -45,7 +45,7 @@ export const createInvoice = async (prevState: unknown, formData: FormData) => {
     return submission.reply();
   }
 
-  await prisma.invoice.create({
+  const data = await prisma.invoice.create({
     data: {
       clientAddress: submission.value.clientAddress,
       clientEmail: submission.value.clientEmail,
@@ -88,7 +88,7 @@ export const createInvoice = async (prevState: unknown, formData: FormData) => {
         amount: submission.value.total,
         currency: submission.value.currency as "USD" | "EUR",
       }),
-      invoiceLink: "Test_Invoivelink",
+      invoiceLink: `http://localhost:3000/api/invoice/${data.id}`,
     },
   });
 

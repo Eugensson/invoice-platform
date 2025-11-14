@@ -30,7 +30,19 @@ import { createInvoice } from "@/app/actions";
 import { invoiceSchema } from "@/app/utils/zodSchemas";
 import { formatCurrency } from "@/app/utils/format-currency";
 
-export const CreateInvoice = () => {
+interface CreateInvoiceProps {
+  firstName: string;
+  lastName: string;
+  address: string;
+  email: string;
+}
+
+export const CreateInvoice = ({
+  firstName,
+  lastName,
+  address,
+  email,
+}: CreateInvoiceProps) => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [lastResult, action] = useActionState(createInvoice, undefined);
   const [form, fields] = useForm({
@@ -124,18 +136,21 @@ export const CreateInvoice = () => {
                 key={fields.fromName.name}
                 name={fields.fromName.name}
                 placeholder="Your name"
+                defaultValue={firstName + " " + lastName}
               />
               <p className="text-xs text-red-500">{fields.fromName.errors}</p>
               <Input
                 key={fields.fromEmail.key}
                 name={fields.fromEmail.name}
                 placeholder="Your email"
+                defaultValue={email}
               />
               <p className="text-xs text-red-500">{fields.fromEmail.errors}</p>
               <Input
                 key={fields.fromAddress.name}
                 name={fields.fromAddress.name}
                 placeholder="Your address"
+                defaultValue={address}
               />
               <p className="text-xs text-red-500">
                 {fields.fromAddress.errors}
