@@ -1,3 +1,5 @@
+"use client";
+
 import {
   CheckCircle,
   DownloadCloud,
@@ -15,12 +17,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface InvoiceActionsProps {
   id: string;
 }
 
 export const InvoiceActions = ({ id }: InvoiceActionsProps) => {
+  const handleSendReminder = () => {
+    toast.promise(
+      fetch(`/api/email/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      {
+        loading: "Sending remainder email...",
+        success: "Remainder email sent successfully!",
+        error: "Failed to send reminder email",
+      }
+    );
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -41,11 +60,9 @@ export const InvoiceActions = ({ id }: InvoiceActionsProps) => {
             <span>Download invoice</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="">
-            <Mail className="mr-2 size-4" />
-            <span>Reminder email</span>
-          </Link>
+        <DropdownMenuItem onClick={handleSendReminder}>
+          <Mail className="mr-2 size-4" />
+          <span>Reminder email</span>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="">

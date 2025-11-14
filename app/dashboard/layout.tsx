@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/sonner";
 import { DashboardLinks } from "@/components/dashboard-links";
 
 import prisma from "@/app/utils/db";
@@ -113,6 +114,7 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
           </main>
         </div>
       </div>
+      <Toaster richColors closeButton theme="light" />
     </>
   );
 };
