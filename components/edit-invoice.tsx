@@ -26,24 +26,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { SubmitButton } from "@/components/submit-button";
 
-import { createInvoice } from "@/app/actions";
+import { editInvoice } from "@/app/actions";
 import { invoiceSchema } from "@/app/utils/zodSchemas";
+import { Invoice } from "@/lib/generated/prisma/client";
 import { formatCurrency } from "@/app/utils/format-currency";
 
-interface CreateInvoiceProps {
-  firstName: string;
-  lastName: string;
-  address: string;
-  email: string;
+interface EditInvoiceProps {
+  data: Invoice;
 }
 
-export const CreateInvoice = ({
-  firstName,
-  lastName,
-  address,
-  email,
-}: CreateInvoiceProps) => {
-  const [lastResult, action] = useActionState(createInvoice, undefined);
+export const EditInvoice = ({ data }: EditInvoiceProps) => {
+  const [lastResult, action] = useActionState(editInvoice, undefined);
   const [form, fields] = useForm({
     lastResult,
     onValidate({ formData }) {
@@ -53,10 +46,12 @@ export const CreateInvoice = ({
     shouldRevalidate: "onInput",
   });
 
-  const [rate, setRate] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [currency, setCurrency] = useState<"USD" | "EUR">("USD");
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [rate, setRate] = useState(data.invoiceItemRate.toString());
+  const [quantity, setQuantity] = useState(data.invoiceItemQuantity.toString());
+  const [currency, setCurrency] = useState<"USD" | "EUR">(
+    data.currency as "USD" | "EUR"
+  );
+  const [selectedDate, setSelectedDate] = useState<Date>(data.date);
 
   const calcTotal = (Number(quantity) || 0) * (Number(rate) || 0);
 
@@ -75,6 +70,7 @@ export const CreateInvoice = ({
             name={fields.date.name}
             value={selectedDate.toISOString()}
           />
+          <input type="hidden" name="id" value={data.id} />
           <input type="hidden" name={fields.total.name} value={calcTotal} />
           <div className="flex flex-col gap-1">
             <div className="w-fit flex items-center gap-4">
@@ -83,7 +79,7 @@ export const CreateInvoice = ({
                 type="text"
                 key={fields.invoiceName.key}
                 name={fields.invoiceName.name}
-                defaultValue={fields.invoiceName.initialValue}
+                defaultValue={data.invoiceName}
                 placeholder="Test 123"
               />
             </div>
@@ -99,7 +95,7 @@ export const CreateInvoice = ({
                 <Input
                   key={fields.invoiceNumber.key}
                   name={fields.invoiceNumber.name}
-                  defaultValue={fields.invoiceNumber.initialValue}
+                  defaultValue={data.invoiceNumber}
                   className="rounded-l-none"
                   placeholder="5"
                 />
@@ -113,7 +109,7 @@ export const CreateInvoice = ({
               <Select
                 key={fields.currency.key}
                 name={fields.currency.name}
-                defaultValue="USD"
+                defaultValue={data.currency}
                 onValueChange={(value) => setCurrency(value as "USD" | "EUR")}
               >
                 <SelectTrigger className="w-full">
@@ -136,21 +132,21 @@ export const CreateInvoice = ({
                 key={fields.fromName.name}
                 name={fields.fromName.name}
                 placeholder="Your name"
-                defaultValue={firstName + " " + lastName}
+                defaultValue={data.fromName}
               />
               <p className="text-xs text-red-500">{fields.fromName.errors}</p>
               <Input
                 key={fields.fromEmail.key}
                 name={fields.fromEmail.name}
                 placeholder="Your email"
-                defaultValue={email}
+                defaultValue={data.fromEmail}
               />
               <p className="text-xs text-red-500">{fields.fromEmail.errors}</p>
               <Input
                 key={fields.fromAddress.name}
                 name={fields.fromAddress.name}
                 placeholder="Your address"
-                defaultValue={address}
+                defaultValue={data.fromAddress}
               />
               <p className="text-xs text-red-500">
                 {fields.fromAddress.errors}
@@ -161,14 +157,14 @@ export const CreateInvoice = ({
               <Input
                 key={fields.clientName.name}
                 name={fields.clientName.name}
-                defaultValue={fields.clientName.initialValue}
+                defaultValue={data.clientName}
                 placeholder="Client name"
               />
               <p className="text-xs text-red-500">{fields.clientName.errors}</p>
               <Input
                 key={fields.clientEmail.key}
                 name={fields.clientEmail.name}
-                defaultValue={fields.clientEmail.initialValue}
+                defaultValue={data.clientEmail}
                 placeholder="Client email"
               />
               <p className="text-xs text-red-500">
@@ -177,7 +173,7 @@ export const CreateInvoice = ({
               <Input
                 key={fields.clientAddress.name}
                 name={fields.clientAddress.name}
-                defaultValue={fields.clientAddress.initialValue}
+                defaultValue={data.clientAddress}
                 placeholder="Client address"
               />
               <p className="text-xs text-red-500">
@@ -224,7 +220,7 @@ export const CreateInvoice = ({
               <Select
                 key={fields.dueDate.key}
                 name={fields.dueDate.name}
-                defaultValue={fields.dueDate.initialValue}
+                defaultValue={data.dueDate.toString()}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select due date" />
@@ -250,7 +246,7 @@ export const CreateInvoice = ({
                 <Textarea
                   key={fields.invoiceItemDescription.key}
                   name={fields.invoiceItemDescription.name}
-                  defaultValue={fields.invoiceItemDescription.initialValue}
+                  defaultValue={data.invoiceItemDescription}
                   placeholder="Item name & description"
                 />
                 <p className="text-xs text-red-500">
@@ -312,13 +308,13 @@ export const CreateInvoice = ({
             <Textarea
               key={fields.note.key}
               name={fields.note.name}
-              defaultValue={fields.note.initialValue}
+              defaultValue={data.note ?? undefined}
               placeholder="Add your note(-s) right here..."
             />
             <p className="text-xs text-red-500">{fields.note.errors}</p>
           </div>
           <div className="flex items-center justify-end">
-            <SubmitButton text="Send invoice to Client" className="w-fit" />
+            <SubmitButton text="Update invoice" className="w-fit" />
           </div>
         </form>
       </CardContent>
