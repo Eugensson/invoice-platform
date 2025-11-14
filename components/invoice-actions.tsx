@@ -36,7 +36,7 @@ export const InvoiceActions = ({ id }: InvoiceActionsProps) => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="">
+          <Link href={`/api/invoice/${id}`} target="_blank">
             <DownloadCloud className="mr-2 size-4" />
             <span>Download invoice</span>
           </Link>
