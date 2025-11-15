@@ -14,8 +14,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { SubmitButton } from "@/components/submit-button";
 
 import prisma from "@/app/utils/db";
-import { deleteInvoice } from "@/app/actions";
 import { requireUser } from "@/app/utils/hooks";
+import { markInvoiceAsPaid } from "@/app/actions";
 
 const Authorize = async (invoiceId: string, userId: string) => {
   const data = await prisma.invoice.findUnique({
@@ -29,7 +29,7 @@ const Authorize = async (invoiceId: string, userId: string) => {
 
 type Params = Promise<{ invoiceId: string }>;
 
-const DeleteInvoicePage = async ({ params }: { params: Params }) => {
+const MarkIsPaidPage = async ({ params }: { params: Params }) => {
   const { invoiceId } = await params;
   const session = await requireUser();
 
@@ -39,15 +39,17 @@ const DeleteInvoicePage = async ({ params }: { params: Params }) => {
     <div className="flex flex-1 items-center justify-center">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Delete Invoice</CardTitle>
+          <CardTitle className="text-2xl font-bold">
+            Mark Invoice as Paid
+          </CardTitle>
           <CardDescription>
-            Are you sure you want to delete this invoice?
+            Are you sure you want to mark this invoice as paid?
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Image
-            src="/warning.jpg"
-            alt="Exclamation mark"
+            src="/paid.jpg"
+            alt="Paid stamp"
             width={100}
             height={100}
             className="rounded-lg mx-auto"
@@ -57,7 +59,7 @@ const DeleteInvoicePage = async ({ params }: { params: Params }) => {
           <Link
             href="/dashboard/invoices"
             className={buttonVariants({
-              variant: "secondary",
+              variant: "outline",
               className: "px-6",
             })}
           >
@@ -66,14 +68,10 @@ const DeleteInvoicePage = async ({ params }: { params: Params }) => {
           <form
             action={async () => {
               "use server";
-              await deleteInvoice(invoiceId);
+              await markInvoiceAsPaid(invoiceId);
             }}
           >
-            <SubmitButton
-              text="Delete Invoice"
-              className="w-full"
-              variant="destructive"
-            />
+            <SubmitButton text="Mark as Paid" className="w-full" />
           </form>
         </CardFooter>
       </Card>
@@ -81,4 +79,4 @@ const DeleteInvoicePage = async ({ params }: { params: Params }) => {
   );
 };
 
-export default DeleteInvoicePage;
+export default MarkIsPaidPage;

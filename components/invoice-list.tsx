@@ -68,7 +68,7 @@ export const InvoiceList = async () => {
               }).format(invoice.createdAt)}
             </TableCell>
             <TableCell className="text-right">
-              <InvoiceActions id={invoice.id} />
+              <InvoiceActions id={invoice.id} status={invoice.status} />
             </TableCell>
           </TableRow>
         ))}

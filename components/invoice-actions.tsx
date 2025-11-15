@@ -21,9 +21,10 @@ import { toast } from "sonner";
 
 interface InvoiceActionsProps {
   id: string;
+  status: "PENDING" | "PAID";
 }
 
-export const InvoiceActions = ({ id }: InvoiceActionsProps) => {
+export const InvoiceActions = ({ id, status }: InvoiceActionsProps) => {
   const handleSendReminder = () => {
     toast.promise(
       fetch(`/api/email/${id}`, {
@@ -70,12 +71,14 @@ export const InvoiceActions = ({ id }: InvoiceActionsProps) => {
             <span>Delete invoice</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="">
-            <CheckCircle className="mr-2 size-4" />
-            <span>Mark as paid</span>
-          </Link>
-        </DropdownMenuItem>
+        {status !== "PAID" && (
+          <DropdownMenuItem asChild>
+            <Link href={`/dashboard/invoices/${id}/paid`}>
+              <CheckCircle className="mr-2 size-4" />
+              <span>Mark as paid</span>
+            </Link>
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
