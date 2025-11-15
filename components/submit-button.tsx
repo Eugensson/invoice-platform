@@ -9,15 +9,29 @@ import { cn } from "@/lib/utils";
 interface SubmitButtonProps {
   text: string;
   className?: string;
+  variant?:
+    | "link"
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | null
+    | undefined;
 }
 
-export const SubmitButton = ({ text, className }: SubmitButtonProps) => {
+export const SubmitButton = ({
+  text,
+  className,
+  variant,
+}: SubmitButtonProps) => {
   const { pending } = useFormStatus();
 
   return (
     <Button
       type="submit"
       className={cn("mt-5 w-full", className)}
+      variant={variant}
       disabled={pending}
     >
       {pending ? (

@@ -65,7 +65,7 @@ export const InvoiceActions = ({ id }: InvoiceActionsProps) => {
           <span>Reminder email</span>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="">
+          <Link href={`/dashboard/invoices/${id}/delete`}>
             <Trash className="mr-2 size-4" />
             <span>Delete invoice</span>
           </Link>

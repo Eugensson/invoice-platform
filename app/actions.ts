@@ -160,3 +160,16 @@ export const editInvoice = async (prevState: unknown, formData: FormData) => {
 
   return redirect("/dashboard/invoices");
 };
+
+export const deleteInvoice = async (invoiceId: string) => {
+  const session = await requireUser();
+
+  await prisma.invoice.delete({
+    where: {
+      id: invoiceId,
+      userId: session.user?.id,
+    },
+  });
+
+  return redirect("/dashboard/invoices");
+};
