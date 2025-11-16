@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "app/**": {
+      "includeFiles": "lib/generated/prisma/**"
+    },
+    "api/**": {
+      "includeFiles": "lib/generated/prisma/**"
+    }
+  }
+}
