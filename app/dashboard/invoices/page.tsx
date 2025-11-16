@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { Plus } from "lucide-react";
 
 import {
@@ -9,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { buttonVariants } from "@/components/ui/button";
 import { InvoiceList } from "@/components/invoice-list";
 
@@ -28,7 +30,9 @@ const InvoicesPage = () => {
         </CardAction>
       </CardHeader>
       <CardContent>
-        <InvoiceList />
+        <Suspense fallback={<Skeleton className="w-full h-115" />}>
+          <InvoiceList />
+        </Suspense>
       </CardContent>
     </Card>
   );
