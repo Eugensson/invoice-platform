@@ -25,6 +25,7 @@ import { DashboardLinks } from "@/components/dashboard-links";
 import prisma from "@/app/utils/db";
 import { signOut } from "@/app/utils/auth";
 import { requireUser } from "@/app/utils/hooks";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 async function getUser(userId: string) {
   const data = await prisma.user.findUnique({
@@ -71,7 +72,8 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
                 />
               </SheetContent>
             </Sheet>
-            <div className="ml-auto flex items-center">
+            <div className="ml-auto flex items-center gap-2">
+              <ThemeToggle />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
